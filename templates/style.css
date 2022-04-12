@@ -1,0 +1,26 @@
+.selector_table {
+    width: 100%;
+    margin: auto;
+    border: 1;
+    
+}
+
+.groups {
+    width: 30%;
+    background-color: burlywood;
+}
+
+.content {
+    width: 40%;
+    background-color: burlywood;
+}
+
+.navigate {
+    width: 30%;
+    background-color: aqua;
+}
+
+.container {
+    width: 100%;
+    background-color: black;
+}
