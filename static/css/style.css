@@ -1,0 +1,57 @@
+.selector_table {
+    width: 100%;
+    height: 100%;
+    height: 1000px;
+    margin: auto;
+    
+}
+
+.gradient {
+    background: #fefcea;
+    background: linear-gradient(to top, #ffffff, #72aabbc7);
+    padding: 10px;
+}
+
+.left-right-borders {
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    padding: 10px;
+    align:top;
+    vertical-align:top;
+}
+
+.top-botton-borders {
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+    padding: 10px;
+
+}   
+
+
+td.groups {
+    width: 15%;
+    height: 100%;
+    background: linear-gradient(to bottom, #ffffff, #72aabbc7);
+}
+
+td.content {
+    width: 65%;
+    height: 100%;
+    background: linear-gradient(to bottom, #ffffff, #c9f2ffc7);
+}
+
+td.navigate {
+    width: 20%;
+    height: 100%;
+    background: linear-gradient(to bottom, #ffffff, #72aabbc7);
+}
+
+td.container {
+    width: 100%;
+    background: black;
+}
+
+.table_posts{
+    border: 1px dotted yellowgreen;
+    background: linear-gradient(to bottom, white, yellow);
+}

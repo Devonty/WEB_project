@@ -2,10 +2,10 @@
 <html lang="en">
 
 <head>
-    
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="..\static\css\style.css">
     <link rel="stylesheet"
           href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
@@ -15,23 +15,49 @@
 
 <body>
 <header>
-    <nav class="navbar navbar-light bg-light">
-        <a class="navbar-brand" href="#">{% block header %}{% endblock %}</a>
+    <nav class="navbar navbar-light bg-light gradient top-botton-borders">
+        <a class="navbar-brand" href="#">
+            {% block header %}
+            {% if current_user.is_authenticated %}
+            <a class="navbar-brand" href="/logout">{{ current_user.name }}</a>
+            {% else %}
+            <p>
+                <a class="btn btn-primary " href="/register">Зарегистрироваться</a>
+                <a class="btn btn-success" href="/login">Войти</a>
+            </p>
+            {% endif %}
+            {% endblock %}
+        </a>
     </nav>
 </header>
 <!-- Begin page content -->
-    <table class="selector_table">
-        <tr>
-            <td class="groups">
-                Groups
-            </td>
-            <td class="content">
-                Content
-            </td>
-            <td class="navigate">
-                Navigate
-            </td>
-        </tr>
-    </table>
+<table class="selector_table" align="left" valign="top">
+    <tr>
+        <td class="groups left-right-borders">
+            {% block groups %}
+            <p>Группы</p>
+            {% if current_user.is_authenticated %}
+            {% for group in groups_id_name%}
+            <a href={{"/group/" + group[0]}}>{{group[1]}}</a><br>
+            {% endfor %}
+            {% endif %}
+            {% endblock %}
+        </td>
+        <td class="content left-right-borders">
+            {% block content %}
+            <p>Контент</p>
+            {% endblock %}
+        </td>
+        <td class="navigate left-right-borders">
+            {% block navigate %}
+            <p>Навигация</p>
+            <a href="/">Главная</a><br>
+            <a href="/register">Регистрация</a><br>
+            <a href="/login">Авторизация</a><br>
+            <a href="/create_group">Создание группы</a><br>
+            {% endblock %}
+        </td>
+    </tr>
+</table>
 </body>
 </html>

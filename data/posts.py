@@ -8,7 +8,7 @@ class Post(SqlAlchemyBase):
     __tablename__ = 'posts'
 
     id = sqlalchemy.Column(sqlalchemy.Integer, primary_key=True, autoincrement=True)
-    author = orm.relation('User')
+    author = orm.relation('User', back_populates='posts')
     author_id = sqlalchemy.Column(sqlalchemy.Integer, sqlalchemy.ForeignKey("users.id"))
     title = sqlalchemy.Column(sqlalchemy.String)
     text = sqlalchemy.Column(sqlalchemy.String)
