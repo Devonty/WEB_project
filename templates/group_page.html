@@ -1,29 +1,54 @@
 {% extends "base.html" %}
 
 {% block content %}
-<p>Контент</p>
+<h1>{{group.name}}</h1>
 {% if current_user.is_authenticated%}
-
+<div class="btn-group">
+    <a href={{"/leave_group/" + group.id.__str__()}} class="btn btn-danger">Покинуть</a>
+    <a href={{"/create_post/" + group.id.__str__()}} class="btn btn-success">Создать пост</a>
+</div>
+<br>
+{% if not posts%}
+<h2>Здесь будут отображаться посты, но пока тут пусто :)</h2>
+{% endif %}
 {% for post in posts%}
-    <table class="table_posts">
-        <tr>
-            <td rowspan="2" colspan="1" width="10%">
-                <img src={{post.author.avatar_image_url}} alt="" width="50%">
-            </td>
-            <td> {{post.title}} </td>
-        </tr>
-        <tr>
-            <td>{{post.text}}</td>
-        </tr>
-        <tr>
-            <td colspan="1">{{post.post_datetime}}</td>
-            <td colspan="2">
-                {%if post.image_url != "--None__"%}
-                    <img src={{post.image_url}} alt="альтернативный текст">
+<table class="table_posts">
+    <tr>
+        <td rowspan="2" colspan="1" width="10%">
+            <img src={{post.author.avatar_image_url}} alt="" width="50%">
+            <p class="user_name">{{post.author.name}}</p>
+        </td>
+        <td> {{post.title}}</td>
+    </tr>
+    <tr>
+        <td>{{post.text}}</td>
+    </tr>
+    <tr>
+        <td colspan="1">{{post.post_datetime}}</td>
+        <td colspan="2">
+            {%if post.image_url != NOT_DEFINDED%}
+            <img src={{post.image_url}} alt="альтернативный текст">
+            {% endif %}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            {% if group.admin_id == current_user.id or post.author_id == current_user.id%}
+            <div class="btn-group">
+                <a onclick="return proverka();" href={{"/delete_post/" + post.id.__str__()}}
+                   class="btn btn-danger">
+                    Удалить
+                </a>
+                {% if post.author_id == current_user.id%}
+                <a href="/edit_post/{{group.id.__str__()}}/{{post.id.__str__()}}" class="btn btn-warning">
+                    Редактировать пост
+                </a>
                 {% endif %}
-            </td>
-        </tr>
-    </table>
+            </div>
+            {% endif %}
+        </td>
+    </tr>
+</table>
 {% endfor %}
 
 {% else %}

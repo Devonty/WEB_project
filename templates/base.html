@@ -5,7 +5,8 @@
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="..\static\css\style.css">
+    <script src={{script_url}}></script>
+    <link rel="stylesheet" type="text/css" href={{css_url}}/>
     <link rel="stylesheet"
           href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
@@ -37,9 +38,13 @@
             {% block groups %}
             <p>Группы</p>
             {% if current_user.is_authenticated %}
-            {% for group in groups_id_name%}
-            <a href={{"/group/" + group[0]}}>{{group[1]}}</a><br>
-            {% endfor %}
+            <div class="btn-group-vertical">
+                {% for group in groups%}
+                <a type="button" class="btn btn-primary" href={{"/group/" + group.id.__str__()}}>
+                    {{group.name}}
+                </a>
+                {% endfor %}
+            </div>
             {% endif %}
             {% endblock %}
         </td>

@@ -6,10 +6,10 @@
 <h3>{{group.description}}</h3>
 
 <form action="/index">
-    <button type="submit" class="btn btn-danger">Danger</button>
+    <button type="submit" class="btn btn-danger">Не вступать</button>
 </form>
 <form action={{"/join_group/" + group.id.__str__()}}>
-    <button type="submit" class="btn btn-success">Success</button>
+    <button type="submit" class="btn btn-success">Вступить</button>
 </form>
 
 {% endblock %}
