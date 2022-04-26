@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+<table class="table_posts">
+    <tr>
+        <td rowspan="2" colspan="1" width="10%">
+            <img src={{post.author.avatar_image_url}} alt="" width="50%">
+            <p class="user_name">{{post.author.name}}</p>
+        </td>
+        <td> {{post.title}}</td>
+    </tr>
+    <tr>
+        <td>{{post.text}}</td>
+    </tr>
+    <tr>
+        <td colspan="1">{{post.post_datetime}}</td>
+        <td colspan="2">
+            {%if post.image_url != NOT_DEFINDED%}
+            <img src={{post.image_url}} alt="альтернативный текст">
+            {% endif %}
+        </td>
+    </tr>
+</table>
+{% endblock %}

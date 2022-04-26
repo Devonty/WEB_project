@@ -14,3 +14,4 @@ class Post(SqlAlchemyBase):
     text = sqlalchemy.Column(sqlalchemy.String)
     post_datetime = sqlalchemy.Column(sqlalchemy.DateTime, default=datetime.datetime.now())
     image_url = sqlalchemy.Column(sqlalchemy.String, default=NOT_DEFINDED)
+

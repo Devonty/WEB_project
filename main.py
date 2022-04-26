@@ -13,6 +13,7 @@ from data.relations import RelationsGroupsUsersPosts, RelationsGroupUser
 from forms import user_forms, group_forms, post_forms
 
 import logging
+import random
 
 logger = logging.getLogger('WebForum')
 logger.setLevel(logging.DEBUG)
@@ -46,8 +47,7 @@ def render_template_moded(*args, **kwargs):
         groups_id_name = [(str(i.id), str(i.name)) for i in groups]
         kwargs['groups_id_name'] = groups_id_name
         kwargs['groups'] = groups
-        logger.info(groups_id_name)
-        logger.info(groups)
+    logger.info(kwargs)
     return render_template(*args, **kwargs)
 
 
@@ -120,6 +120,8 @@ def login():
 def group_page(group_id):
     db_sess = db_session.create_session()
     group = db_sess.query(Group).filter(Group.id == group_id).first()
+    if not group:
+        return redirect('/index')
     if not db_sess.query(RelationsGroupUser).filter(RelationsGroupUser.who_id == current_user.id,
                                                     RelationsGroupUser.where_id == group_id).first():
         # Хочет ли вступить в группу
@@ -182,15 +184,20 @@ def join_group(group_id):
         RelationsGroupUser.who_id == current_user.id,
         RelationsGroupUser.where_id == group_id
     ).first()
-    if connect:
+    group = db_sess.query(Group).filter(Group.id == group_id).first()
+
+    print(group)
+    if not group:
         return redirect('/index')
+    if connect:
+        return redirect(f'/group/{group_id}')
+    logger.debug(f'Добавляю в группу {group_id} пользлователя {current_user.id}')
     # Добавление
-    gr = db_sess.query(Group).filter(Group.id == group_id).first()
-    rel = RelationsGroupUser(
+    relation = RelationsGroupUser(
         who_id=current_user.id,
-        where_id=gr.id
+        where_id=group.id
     )
-    db_sess.add(rel)
+    db_sess.add(relation)
     db_sess.commit()
     logger.debug('Добавил связь')
     return redirect(f'/group/{group_id}')
@@ -205,10 +212,17 @@ def leave_group(group_id):
         RelationsGroupUser.who_id == current_user.id,
         RelationsGroupUser.where_id == group_id
     ).first()
-    if connect:
-        logger.debug(connect)
-        db_sess.delete(connect)
-        db_sess.commit()
+    group = db_sess.query(Group).filter(Group.id == group_id).first()
+    if not group or not connect:
+        return redirect('/index')
+    # Если был админом
+    new_admin = random.choice(db_sess.query(User).all())
+    group.admin_id = new_admin.id
+    group.admin = new_admin
+
+    db_sess.merge(group)
+    db_sess.delete(connect)
+    db_sess.commit()
     return redirect('/index')
 
 
@@ -307,6 +321,7 @@ def edit_post(group_id, post_id):
 
 
 @app.route('/delete_post/<post_id>')
+@login_required
 def delete_post(post_id):
     db_sess = db_session.create_session()
     connect = db_sess.query(RelationsGroupsUsersPosts).filter(
@@ -329,6 +344,25 @@ def delete_post(post_id):
     db_sess.delete(connect)
     db_sess.commit()
     return redirect(f'/group/{group.id}')
+
+
+@app.route('/post/<post_id>')
+@login_required
+def show_post(post_id):
+    db_sess = db_session.create_session()
+    post = db_sess.query(Post).filter(Post.id == post_id).first()
+    group_id = db_sess.query(RelationsGroupsUsersPosts).filter(
+        RelationsGroupsUsersPosts.what_id == post_id
+    ).first().where_id
+    connect = db_sess.query(RelationsGroupUser).filter(
+        RelationsGroupUser.where_id == group_id,
+        RelationsGroupUser.who_id == current_user.id
+    )
+    # Если не в группе
+    if not post or not connect:
+        return redirect('/index')
+
+    return render_template_moded('show_post.html', post=post)
 
 
 @app.route('/logout')
